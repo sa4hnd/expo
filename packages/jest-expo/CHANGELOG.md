@@ -10,6 +10,8 @@
 
 ### 💡 Others
 
+- Execute the Jest binary inside the "jest" proxy. ([#37394](https://github.com/expo/expo/pull/37394) by [@byCedric](https://github.com/byCedric))
+
 ## 54.0.0 — 2025-08-13
 
 ### 🐛 Bug fixes
