@@ -10,6 +10,8 @@
 
 ### 💡 Others
 
+- [iOS] Change Constants to Constant/Property.
+
 ## 15.0.2 — 2025-08-16
 
 _This version does not introduce any user-facing changes._
