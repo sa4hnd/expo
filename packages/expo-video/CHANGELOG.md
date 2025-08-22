@@ -5,16 +5,15 @@
 ### 🛠 Breaking changes
 
 - [Android] Always keep the native controls always enabled in fullscreen mode to mimic iOS. ([#39015](https://github.com/expo/expo/pull/39015) by [@behenate](https://github.com/behenate))
-- [Android] In order to show the now playing notification, the `supportsBackgroundPlayground` property of the config plugin has to be `true`. ([#37225](https://github.com/expo/expo/pull/37566) by [@kerwanp](https://github.com/kerwanp))
+- [Android] In order to show the now playing notification, the `supportsBackgroundPlayground` property of the config plugin has to be `true`. ([#38980](https://github.com/expo/expo/pull/38980) by [@kerwanp](https://github.com/kerwanp))
 
 ### 🎉 New features
 
-- [Android] Support Foreground service when `showNowPlayingNotification` and `supportsBackgroundPlayback` are configured. ([#37225](https://github.com/expo/expo/pull/37566) by [@kerwanp](https://github.com/kerwanp))
 - [Android][iOS] Add `keepScreenOnWhilePlaying` property to the player. ([#37137](https://github.com/expo/expo/pull/37137) by [@behenate](https://github.com/behenate))
 
 ### 🐛 Bug fixes
 
-- [Android] Fix video player stopping playback a few minutes after locking the device. ([#37225](https://github.com/expo/expo/pull/37566) by [@kerwanp](https://github.com/kerwanp))
+- [Android] Fix video player stopping playback a few minutes after locking the device. ([#38980](https://github.com/expo/expo/pull/38980) by [@kerwanp](https://github.com/kerwanp))
 
 ### 💡 Others
 
