@@ -139,8 +139,7 @@ class AppContext(
    */
   inline fun <reified Module> legacyModule(): Module? {
     return try {
-      val module = legacyModuleRegistry.getModule(Module::class.java)
-      return module
+      legacyModuleRegistry.getModule(Module::class.java)
     } catch (_: Exception) {
       null
     }
