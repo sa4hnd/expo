@@ -10,6 +10,8 @@
 
 ### 💡 Others
 
+- [iOS] Migrate parsers to Swift.
+
 ## 29.0.4 — 2025-08-21
 
 ### 🐛 Bug fixes
