@@ -9,6 +9,7 @@
 ### 🐛 Bug fixes
 
 - fix setting dynamic options in the tab, which is rendered in link preview ([#39139](https://github.com/expo/expo/pull/39139) by [@Ubax](https://github.com/Ubax))
+- fix dynamic options setting in native tabs ([#39152](https://github.com/expo/expo/pull/39152) by [@Ubax](https://github.com/Ubax))
 
 ### 💡 Others
 

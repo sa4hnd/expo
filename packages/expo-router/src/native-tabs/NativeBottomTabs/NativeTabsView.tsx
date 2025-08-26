@@ -29,13 +29,7 @@ import { shouldTabBeVisible } from './utils';
 featureFlags.experiment.controlledBottomTabs = false;
 
 export function NativeTabsView(props: NativeTabsViewProps) {
-  const {
-    builder,
-    minimizeBehavior,
-    disableIndicator,
-    focusedIndex,
-    disableTransparentOnScrollEdge,
-  } = props;
+  const { builder, minimizeBehavior, disableIndicator, focusedIndex } = props;
   const { state, descriptors, navigation } = builder;
   const { routes } = state;
 
@@ -56,8 +50,8 @@ export function NativeTabsView(props: NativeTabsViewProps) {
   const scrollEdgeAppearance = convertStyleToAppearance({
     ...props.labelStyle,
     iconColor: props.iconColor,
-    blurEffect: disableTransparentOnScrollEdge ? props.blurEffect : 'none',
-    backgroundColor: disableTransparentOnScrollEdge ? props.backgroundColor : null,
+    blurEffect: props.blurEffect,
+    backgroundColor: props.backgroundColor,
     badgeBackgroundColor: props.badgeBackgroundColor,
   });
 

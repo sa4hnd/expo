@@ -43,7 +43,7 @@ const utils_1 = require("./utils");
 // Otherwise user may see glitches when switching between tabs.
 react_native_screens_1.featureFlags.experiment.controlledBottomTabs = false;
 function NativeTabsView(props) {
-    const { builder, minimizeBehavior, disableIndicator, focusedIndex, disableTransparentOnScrollEdge, } = props;
+    const { builder, minimizeBehavior, disableIndicator, focusedIndex } = props;
     const { state, descriptors, navigation } = builder;
     const { routes } = state;
     const deferredFocusedIndex = (0, react_1.useDeferredValue)(focusedIndex);
@@ -60,8 +60,8 @@ function NativeTabsView(props) {
     const scrollEdgeAppearance = (0, appearance_1.convertStyleToAppearance)({
         ...props.labelStyle,
         iconColor: props.iconColor,
-        blurEffect: disableTransparentOnScrollEdge ? props.blurEffect : 'none',
-        backgroundColor: disableTransparentOnScrollEdge ? props.backgroundColor : null,
+        blurEffect: props.blurEffect,
+        backgroundColor: props.backgroundColor,
         badgeBackgroundColor: props.badgeBackgroundColor,
     });
     const appearances = routes.map((route) => ({
