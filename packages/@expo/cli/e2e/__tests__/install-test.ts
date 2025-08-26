@@ -248,6 +248,22 @@ it('does not validate for `EXPO_NO_DEPENDENCY_VALIDATION=1 npx expo install --ch
 });
 
 describe('expo-router integration', () => {
+  let originalConsoleError = console.error;
+
+  beforeEach(() => {
+    originalConsoleError = console.error;
+    console.error = jest.fn((...args) => {
+      if (args[0] && typeof args[0] === 'string' && args[0].includes('[execute]')) {
+        return;
+      }
+      originalConsoleError(...args);
+    });
+  });
+
+  afterEach(() => {
+    console.error = originalConsoleError;
+  });
+
   it('runs `npx expo install --fix`', async () => {
     const projectRoot = await setupTestProjectWithOptionsAsync(
       'install-expo-router-integration',
