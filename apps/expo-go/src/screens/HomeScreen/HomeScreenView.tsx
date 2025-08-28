@@ -17,7 +17,7 @@ import { DevelopmentServersHeader } from './DevelopmentServersHeader';
 import { DevelopmentServersOpenQR } from './DevelopmentServersOpenQR';
 import { DevelopmentServersOpenURL } from './DevelopmentServersOpenURL';
 import { DevelopmentServersPlaceholder } from './DevelopmentServersPlaceholder';
-import { HomeScreenHeader } from './HomeScreenHeader';
+import { VibeHeader, VibeSearchBar, VibeProjectsList } from '../../components/vibe';
 import { ProjectsSection } from './ProjectsSection';
 import { RecentlyOpenedHeader } from './RecentlyOpenedHeader';
 import { RecentlyOpenedSection } from './RecentlyOpenedSection';
@@ -107,83 +107,16 @@ export class HomeScreenView extends React.Component<Props, State> {
 
     return (
       <View style={styles.container}>
-        <HomeScreenHeader currentAccount={data} />
-        <CappedWidthContainerView>
-          <ScrollView
-            refreshControl={
-              <RefreshControl refreshing={isRefreshing} onRefresh={this._handleRefreshAsync} />
-            }
-            bounces
-            key={Platform.OS === 'ios' ? this.props.allHistory.count() : 'scroll-view'}
-            style={styles.container}
-            contentContainerStyle={[styles.contentContainer]}>
-            <UpgradeWarning />
-            <UserReviewSection apps={data?.apps} snacks={data?.snacks} />
-            <DevelopmentServersHeader onHelpPress={this._handlePressHelpProjects} />
-            {projects?.length ? (
-              <View bg="default" rounded="large" border="default" overflow="hidden">
-                {projects.map((project, i) => (
-                  <React.Fragment key={`${project.description}${project.url}`}>
-                    <DevelopmentServerListItem
-                      url={project.url}
-                      image={
-                        project.source === 'desktop'
-                          ? require('../../assets/cli.png')
-                          : require('../../assets/snack.png')
-                      }
-                      imageStyle={styles.projectImageStyle}
-                      title={project.description}
-                      platform={project.platform}
-                      subtitle={project.url}
-                    />
-                    {projects.length > 1 && i !== projects.length - 1 ? (
-                      <Divider style={{ height: 1 }} />
-                    ) : null}
-                  </React.Fragment>
-                ))}
-                {FeatureFlags.ENABLE_PROJECT_TOOLS && FeatureFlags.ENABLE_QR_CODE_BUTTON ? (
-                  <DevelopmentServersOpenQR />
-                ) : null}
-                {FeatureFlags.ENABLE_PROJECT_TOOLS && FeatureFlags.ENABLE_CLIPBOARD_BUTTON ? (
-                  <DevelopmentServersOpenURL />
-                ) : null}
-              </View>
-            ) : (
-              <DevelopmentServersPlaceholder isAuthenticated={this.props.isAuthenticated} />
-            )}
-            {this.props.recentHistory.count() ? (
-              <>
-                <Spacer.Vertical size="medium" />
-                <RecentlyOpenedHeader onClearPress={this._handlePressClearHistory} />
-                <RecentlyOpenedSection recentHistory={this.props.recentHistory} />
-              </>
-            ) : null}
-
-            {data?.apps.length && this.props.accountName ? (
-              <>
-                <Spacer.Vertical size="medium" />
-                <SectionHeader header="Projects" />
-                <ProjectsSection
-                  accountName={this.props.accountName}
-                  apps={data.apps.slice(0, 3)}
-                  showMore={data.apps.length > 3}
-                />
-              </>
-            ) : null}
-
-            {data?.snacks.length && this.props.accountName ? (
-              <>
-                <Spacer.Vertical size="medium" />
-                <SectionHeader header="Snacks" />
-                <SnacksSection
-                  accountName={this.props.accountName}
-                  snacks={data.snacks.slice(0, 3)}
-                  showMore={data.snacks.length > 3}
-                />
-              </>
-            ) : null}
-          </ScrollView>
-        </CappedWidthContainerView>
+        <VibeHeader 
+          onProfilePress={() => this.props.navigation.navigate('Account')}
+          onPlusPress={() => console.log('Plus button pressed')}
+        />
+        {/* Vibe Home Content */}
+        <VibeSearchBar 
+          onSearchChange={(text) => console.log('Search:', text)}
+          onSortPress={() => console.log('Sort pressed')}
+        />
+        <VibeProjectsList />
         <ThemedStatusBar />
       </View>
     );
