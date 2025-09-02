@@ -35,6 +35,10 @@ export async function closeAsync(): Promise<void> {
   return await NativeKernel.closeDevMenuAsync();
 }
 
+export async function openAsync(): Promise<boolean> {
+  return await NativeKernel.showExpoDevMenuAsync();
+}
+
 export async function getItemsToShowAsync(): Promise<{ [key: string]: DevMenuItem }> {
   return await NativeKernel.getDevMenuItemsToShowAsync();
 }

@@ -33,6 +33,10 @@ export default {
 
   async closeDevMenuAsync(): Promise<void> {},
 
+  async showExpoDevMenuAsync(): Promise<boolean> {
+    return true;
+  },
+
   async goToHomeAsync(): Promise<void> {},
 
   async showOrangeMenuAsync(): Promise<boolean> {

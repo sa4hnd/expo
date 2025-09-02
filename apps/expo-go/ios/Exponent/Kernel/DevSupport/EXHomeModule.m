@@ -265,6 +265,22 @@ RCT_EXPORT_METHOD(selectQRReader)
   }
 }
 
+/**
+ * Shows the Expo Go dev menu (HomeMenu component).
+ */
+RCT_EXPORT_METHOD(showExpoDevMenuAsync:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if (_delegate) {
+      [_delegate homeModuleDidRequestToShowExpoDevMenu:self];
+      resolve(@YES);
+    } else {
+      reject(@"DEV_MENU_ERROR", @"Failed to show Expo dev menu", nil);
+    }
+  });
+}
+
 RCT_REMAP_METHOD(getDevMenuSettingsAsync,
                  getDevMenuSettingsAsync:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)

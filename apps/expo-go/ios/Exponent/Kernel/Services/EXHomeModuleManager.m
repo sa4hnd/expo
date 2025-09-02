@@ -8,6 +8,7 @@
 #import "EXKernel.h"
 #import "EXKernelLinkingManager.h"
 #import "EXReactAppManager.h"
+#import "EXDevMenuManager.h"
 
 @implementation EXHomeModuleManager
 
@@ -57,6 +58,13 @@
       [[EXKernel sharedInstance].browserController showQRReader];
     }];
   }
+}
+
+- (void)homeModuleDidRequestToShowExpoDevMenu:(EXHomeModule *)module
+{
+  // Show the Expo Go dev menu (HomeMenu component) using EXDevMenuManager
+  EXDevMenuManager *devMenuManager = [EXDevMenuManager sharedInstance];
+  [devMenuManager open];
 }
 
 - (void)homeModule:(__unused EXHomeModule *)module didOpenUrl:(NSString *)url

@@ -24,6 +24,7 @@
 - (void)homeModuleDidSelectRefresh:(EXHomeModule *)module;
 - (void)homeModuleDidSelectGoToHome:(EXHomeModule *)module;
 - (void)homeModuleDidSelectQRReader:(EXHomeModule *)module;
+- (void)homeModuleDidRequestToShowExpoDevMenu:(EXHomeModule *)module;
 
 @end
 
