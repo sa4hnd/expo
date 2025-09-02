@@ -7,9 +7,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import DevMenuBottomSheet from './DevMenuBottomSheet';
 import { DevMenuView } from './DevMenuView';
+import { DevMenuTopActions } from './DevMenuTopActions';
 import { ColorTheme } from '../constants/Colors';
 import Themes from '../constants/Themes';
 import LocalStorage from '../storage/LocalStorage';
+import * as DevMenu from './DevMenuModule';
 
 function useUserSettings(renderId: string): { preferredAppearance?: string } {
   const [settings, setSettings] = React.useState({});
@@ -52,9 +54,18 @@ function DevMenuApp(props: {
 }) {
   const theme = useAppColorScheme(props.uuid);
 
+  const onAppReload = () => {
+    DevMenu.reloadAppAsync();
+  };
+
+  const onGoToHome = () => {
+    DevMenu.goToHomeAsync();
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
+        <DevMenuTopActions onAppReload={onAppReload} onGoToHome={onGoToHome} />
         <DevMenuBottomSheet uuid={props.uuid}>
           <DCCThemeProvider themePreference={theme as ThemePreference}>
             <ThemeProvider value={Themes[theme]}>

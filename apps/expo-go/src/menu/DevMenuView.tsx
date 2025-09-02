@@ -1,4 +1,4 @@
-import { HomeFilledIcon, iconSize, RefreshIcon } from '@expo/styleguide-native';
+import { iconSize } from '@expo/styleguide-native';
 import MaterialCommunityIcons from '@expo/vector-icons/build/MaterialCommunityIcons';
 import { Divider, useExpoTheme, View } from 'expo-dev-client-components';
 import * as Font from 'expo-font';
@@ -13,6 +13,7 @@ import * as DevMenu from './DevMenuModule';
 import { DevMenuOnboarding } from './DevMenuOnboarding';
 import { DevMenuServerInfo } from './DevMenuServerInfo';
 import { DevMenuTaskInfo } from './DevMenuTaskInfo';
+
 
 type Props = {
   task: { manifestUrl: string; manifestString: string };
@@ -56,7 +57,6 @@ export function DevMenuView({ uuid, task }: Props) {
   const [isOnboardingFinished, setIsOnboardingFinished] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
 
-  const theme = useExpoTheme();
   const insets = useSafeAreaInsets();
 
   const prevUUIDRef = useRef(uuid);
@@ -122,15 +122,7 @@ export function DevMenuView({ uuid, task }: Props) {
     setIsLoaded(true);
   }
 
-  function onAppReload() {
-    collapse();
-    DevMenu.reloadAppAsync();
-  }
 
-  function onGoToHome() {
-    collapse();
-    DevMenu.goToHomeAsync();
-  }
 
   function onPressDevMenuButton(key: string) {
     DevMenu.selectItemWithKeyAsync(key);
@@ -151,8 +143,8 @@ export function DevMenuView({ uuid, task }: Props) {
 
   return (
     <View bg="secondary" flex="1" roundedTop="large" overflow="hidden" style={{ direction: 'ltr' }}>
-      <DevMenuTaskInfo task={task} />
-      <Divider />
+        <DevMenuTaskInfo task={task} />
+        <Divider />
       <View>
         {!isOnboardingFinished ? (
           <DevMenuOnboarding onClose={onOnboardingFinished} />
@@ -164,23 +156,7 @@ export function DevMenuView({ uuid, task }: Props) {
               <UpgradeWarning collapsible />
             </View>
             <Divider />
-            <View padding="medium" style={{ paddingTop: 0 }}>
-              <View bg="default" rounded="large">
-                <DevMenuItem
-                  buttonKey="reload"
-                  label="Reload"
-                  onPress={onAppReload}
-                  icon={<RefreshIcon size={iconSize.small} color={theme.icon.default} />}
-                />
-                <Divider />
-                <DevMenuItem
-                  buttonKey="home"
-                  label="Go Home"
-                  onPress={onGoToHome}
-                  icon={<HomeFilledIcon size={iconSize.small} color={theme.icon.default} />}
-                />
-              </View>
-            </View>
+
             {enableDevMenuTools && devMenuItems && (
               <View padding="medium" style={{ paddingTop: 0 }}>
                 <View bg="default" rounded="large">
