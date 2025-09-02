@@ -32,6 +32,7 @@ import { useAccountName } from './utils/AccountNameContext';
 import { useInitialData } from './utils/InitialDataContext';
 import * as UrlUtils from './utils/UrlUtils';
 import addListenerWithNativeCallback from './utils/addListenerWithNativeCallback';
+import * as OrangeMenu from './menu/OrangeMenuModule';
 
 // Download and cache stack assets, don't block loading on this though
 Asset.loadAsync(StackAssets);
@@ -79,6 +80,11 @@ export default function HomeApp() {
           Linking.openURL(UrlUtils.toExp(initialUrl));
         }
       });
+      
+      // Hide orange menu when on home screen
+      OrangeMenu.hideOrangeMenuAsync().catch((error) => {
+        console.log('Failed to hide orange menu:', error);
+      });
     }
   }, [isShowingSplashScreen]);
 
@@ -89,6 +95,15 @@ export default function HomeApp() {
         manifest = JSON.parse(manifestString);
       }
       dispatch(HistoryActions.addHistoryItem(manifestUrl, manifest));
+      
+      // Show orange menu when a project is opened
+      if (Platform.OS === 'ios') {
+        try {
+          await OrangeMenu.showOrangeMenuAsync();
+        } catch (error) {
+          console.log('Failed to show orange menu:', error);
+        }
+      }
     });
   };
 

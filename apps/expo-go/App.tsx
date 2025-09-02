@@ -11,6 +11,7 @@ import HomeApp from './src/HomeApp';
 import ApolloClient from './src/api/ApolloClient';
 import Store from './src/redux/Store';
 import './src/menu/DevMenuApp';
+import './src/menu/OrangeMenuApp';
 import { AccountNameProvider } from './src/utils/AccountNameContext';
 import { InitialDataProvider } from './src/utils/InitialDataContext';
 

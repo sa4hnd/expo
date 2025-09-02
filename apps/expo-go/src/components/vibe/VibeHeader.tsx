@@ -15,7 +15,7 @@ export const VibeHeader: React.FC<VibeHeaderProps> = ({ onProfilePress, onPlusPr
         {/* Left side - Logo and Title */}
         <View style={styles.logoSection}>
           <View style={styles.orangeSquare} />
-          <Text style={styles.mainTitle}>vibecode</Text>
+          <Text style={styles.mainTitle}>vibecoder</Text>
         </View>
 
         {/* Right side - Action Buttons */}

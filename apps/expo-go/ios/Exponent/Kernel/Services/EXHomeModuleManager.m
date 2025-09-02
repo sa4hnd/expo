@@ -79,4 +79,9 @@
   return NO;
 }
 
+- (RCTReactNativeFactory *)appDelegateForOrangeMenuManager:(id)manager
+{
+  return [EXKernel sharedInstance].appRegistry.homeAppRecord.appManager.expoAppInstance.reactNativeFactory;
+}
+
 @end

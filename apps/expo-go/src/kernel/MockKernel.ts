@@ -35,6 +35,22 @@ export default {
 
   async goToHomeAsync(): Promise<void> {},
 
+  async showOrangeMenuAsync(): Promise<boolean> {
+    return true;
+  },
+
+  async hideOrangeMenuAsync(): Promise<boolean> {
+    return true;
+  },
+
+  async toggleOrangeMenuAsync(): Promise<boolean> {
+    return true;
+  },
+
+  async isOrangeMenuVisibleAsync(): Promise<boolean> {
+    return false;
+  },
+
   selectQRReader(): void {},
 
   async getIsOnboardingFinishedAsync(): Promise<boolean> {

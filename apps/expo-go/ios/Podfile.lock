@@ -4406,7 +4406,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleMaps: b58e9627004f47043897eeae830c3ef023678f3b
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
-  hermes-engine: f09efeff1ad4239a0f921bb5eae8103a244d3525
+  hermes-engine: 7b8bfc04a0fbcb0b7335858c69018731cac36af2
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8

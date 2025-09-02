@@ -8,6 +8,7 @@
 #import "EXKernelDevKeyCommands.h"
 
 #import "EXDevMenuManager.h"
+#import "EXOrangeMenuManager.h"
 
 #import <React/RCTEventDispatcher.h>
 
@@ -44,6 +45,9 @@ NSString *const kEXLastFatalErrorDateDefaultsKey = @"EXKernelLastFatalErrorDateD
 
     // Register keyboard commands like Cmd+D for the simulator.
     [[EXKernelDevKeyCommands sharedInstance] registerDevCommands];
+    
+    // Set up orange menu manager delegate
+    [EXOrangeMenuManager sharedInstance].delegate = kernelServiceInstance;
   }
   return self;
 }
@@ -191,6 +195,64 @@ RCT_EXPORT_METHOD(goToHomeAsync)
   if (_delegate) {
     [_delegate homeModuleDidSelectGoToHome:self];
   }
+}
+
+/**
+ * Shows the orange menu button.
+ */
+RCT_EXPORT_METHOD(showOrangeMenuAsync:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    BOOL success = [[EXOrangeMenuManager sharedInstance] showOrangeMenu];
+    if (success) {
+      resolve(@YES);
+    } else {
+      reject(@"ORANGE_MENU_ERROR", @"Failed to show orange menu", nil);
+    }
+  });
+}
+
+/**
+ * Hides the orange menu button.
+ */
+RCT_EXPORT_METHOD(hideOrangeMenuAsync:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    BOOL success = [[EXOrangeMenuManager sharedInstance] hideOrangeMenu];
+    if (success) {
+      resolve(@YES);
+    } else {
+      reject(@"ORANGE_MENU_ERROR", @"Failed to hide orange menu", nil);
+    }
+  });
+}
+
+/**
+ * Toggles the orange menu button visibility.
+ */
+RCT_EXPORT_METHOD(toggleOrangeMenuAsync:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    BOOL success = [[EXOrangeMenuManager sharedInstance] toggleOrangeMenu];
+    if (success) {
+      resolve(@YES);
+    } else {
+      reject(@"ORANGE_MENU_ERROR", @"Failed to toggle orange menu", nil);
+    }
+  });
+}
+
+/**
+ * Checks if the orange menu is visible.
+ */
+RCT_EXPORT_METHOD(isOrangeMenuVisibleAsync:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  BOOL isVisible = [[EXOrangeMenuManager sharedInstance] isVisible];
+  resolve(@(isVisible));
 }
 
 /**
