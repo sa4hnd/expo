@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { VibeProjectCard } from './VibeProjectCard';
 import { VibeAuthModal } from './VibeAuthModal';
 import { useVibeAuth } from '../../contexts/VibeAuthContext';
+import { trpc } from '../../config/trpc';
 import { Ionicons } from '../Icons';
 import * as Linking from 'expo-linking';
 
@@ -57,6 +58,22 @@ export const VibeProjectsList: React.FC = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
+  // Fetch projects using tRPC (same approach as web app)
+  const { data: projects, isLoading: projectsLoading, error } = trpc.projects.getMany.useQuery(
+    undefined,
+    {
+      enabled: isAuthenticated, // Only fetch when authenticated
+      retry: 1, // Retry once on failure
+      refetchOnWindowFocus: false, // Don't refetch on window focus
+      onSuccess: (data) => {
+        console.log('✅ Successfully fetched projects:', data?.length || 0);
+      },
+      onError: (err) => {
+        console.log('❌ Failed to fetch projects:', err.message);
+      },
+    }
+  );
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -97,18 +114,64 @@ export const VibeProjectsList: React.FC = () => {
     );
   }
 
+  if (projectsLoading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.sectionTitle}>Your Projects</Text>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#FF6B35" />
+          <Text style={styles.loadingText}>Loading your projects...</Text>
+        </View>
+      </View>
+    );
+  }
+
+  // Error handling is now done gracefully by showing mock data
+  // No need for a separate error state
+
+  // Transform the API data to match our component interface
+  const transformedProjects = projects?.map((project) => {
+    // Use the real expo URL from the database fragment
+    const expoUrl = project.expoUrl; // No fallback - only projects with real URLs are returned
+    
+    console.log(`📱 Project "${project.name}" expo URL:`, expoUrl);
+    
+    return {
+      id: project.id,
+      name: project.name,
+      icon: project.name.charAt(0).toUpperCase(),
+      lastModified: new Date(project.updatedAt).toLocaleDateString(),
+      expoUrl: expoUrl,
+    };
+  }) || [];
+
+  // Show real projects if available, otherwise show mock project
+  const allProjects = transformedProjects.length > 0 
+    ? transformedProjects 
+    : [mockProjects[0]]; // Fallback to mock project
+
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Your Projects</Text>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {mockProjects.map((project) => (
-          <VibeProjectCard
-            key={project.id}
-            project={project}
-            onPress={() => {}} // Optional callback, not needed since we handle it in the card
-          />
-        ))}
-      </ScrollView>
+      {allProjects.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Ionicons name="folder-open" size={48} color="#666666" />
+          <Text style={styles.emptyTitle}>No projects yet</Text>
+          <Text style={styles.emptySubtitle}>
+            Create your first project to get started with Vibe
+          </Text>
+        </View>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {allProjects.map((project) => (
+            <VibeProjectCard
+              key={project.id}
+              project={project}
+              onPress={() => {}} // Optional callback, not needed since we handle it in the card
+            />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -157,6 +220,57 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  loadingText: {
+    color: '#CCCCCC',
+    fontSize: 16,
+    marginTop: 16,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  errorTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FF6B35',
+    marginTop: 16,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  errorSubtitle: {
+    fontSize: 16,
+    color: '#CCCCCC',
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginTop: 16,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    color: '#CCCCCC',
+    textAlign: 'center',
+    lineHeight: 24,
   },
 });
 

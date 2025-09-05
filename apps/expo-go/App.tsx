@@ -19,6 +19,7 @@ import { ClerkProvider, publishableKey } from './src/config/clerk';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { trpc, trpcClient } from './src/config/trpc';
 import { VibeAuthProvider } from './src/contexts/VibeAuthContext';
+import { AuthenticatedTRPCProvider } from './src/providers/AuthenticatedTRPCProvider';
 
 if (Platform.OS === 'android') {
   enableScreens(false);
@@ -36,23 +37,21 @@ export default function App() {
 
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <ReduxProvider store={Store}>
-              <ApolloProvider client={ApolloClient}>
-                <InitialDataProvider>
-                  <AccountNameProvider>
-                    <VibeAuthProvider>
-                      <HomeApp />
-                    </VibeAuthProvider>
-                  </AccountNameProvider>
-                </InitialDataProvider>
-              </ApolloProvider>
-            </ReduxProvider>
-          </GestureHandlerRootView>
-        </QueryClientProvider>
-      </trpc.Provider>
+      <AuthenticatedTRPCProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <ReduxProvider store={Store}>
+            <ApolloProvider client={ApolloClient}>
+              <InitialDataProvider>
+                <AccountNameProvider>
+                  <VibeAuthProvider>
+                    <HomeApp />
+                  </VibeAuthProvider>
+                </AccountNameProvider>
+              </InitialDataProvider>
+            </ApolloProvider>
+          </ReduxProvider>
+        </GestureHandlerRootView>
+      </AuthenticatedTRPCProvider>
     </ClerkProvider>
   );
 }
