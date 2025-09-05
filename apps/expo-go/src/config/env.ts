@@ -17,3 +17,4 @@ if (!ENV.CLERK_PUBLISHABLE_KEY) {
 if (!ENV.API_URL) {
   console.warn('EXPO_PUBLIC_API_URL is not set. Using default localhost URL.');
 }
+

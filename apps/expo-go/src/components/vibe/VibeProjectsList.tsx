@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { VibeProjectCard } from './VibeProjectCard';
 import { VibeAuthModal } from './VibeAuthModal';
 import { useVibeAuth } from '../../contexts/VibeAuthContext';
@@ -59,7 +59,12 @@ export const VibeProjectsList: React.FC = () => {
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
   // Fetch projects using tRPC (same approach as web app)
-  const { data: projects, isLoading: projectsLoading, error } = trpc.projects.getMany.useQuery(
+  const { 
+    data: projects, 
+    isLoading: projectsLoading, 
+    error, 
+    refetch 
+  } = trpc.projects.getMany.useQuery(
     undefined,
     {
       enabled: isAuthenticated, // Only fetch when authenticated
@@ -67,12 +72,27 @@ export const VibeProjectsList: React.FC = () => {
       refetchOnWindowFocus: false, // Don't refetch on window focus
       onSuccess: (data) => {
         console.log('✅ Successfully fetched projects:', data?.length || 0);
+        console.log('📊 Projects data:', JSON.stringify(data, null, 2));
       },
       onError: (err) => {
         console.log('❌ Failed to fetch projects:', err.message);
+        console.log('❌ Error details:', err);
       },
     }
   );
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+    } catch (error) {
+      console.error('Error refreshing projects:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -126,29 +146,59 @@ export const VibeProjectsList: React.FC = () => {
     );
   }
 
-  // Error handling is now done gracefully by showing mock data
-  // No need for a separate error state
+  // Show error state if there's an error
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.sectionTitle}>Your Projects</Text>
+        <View style={styles.errorContainer}>
+          <Ionicons name="alert-circle" size={48} color="#FF6B35" />
+          <Text style={styles.errorTitle}>Failed to load projects</Text>
+          <Text style={styles.errorSubtitle}>
+            {error.message || 'Something went wrong. Please try again.'}
+          </Text>
+          <TouchableOpacity 
+            style={styles.signInButton}
+            onPress={() => refetch()}
+          >
+            <Text style={styles.signInButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   // Transform the API data to match our component interface
-  const transformedProjects = projects?.map((project) => {
-    // Use the real expo URL from the database fragment
-    const expoUrl = project.expoUrl; // No fallback - only projects with real URLs are returned
+  console.log('🔍 Raw projects data:', projects);
+  
+  // Handle superjson response format - data is nested under 'json' property
+  const projectsArray = projects?.json || projects;
+  console.log('🔍 Projects array:', projectsArray);
+  console.log('🔍 Is projects array?', Array.isArray(projectsArray));
+  console.log('🔍 Projects length:', projectsArray?.length);
+  
+  const transformedProjects = (projectsArray && Array.isArray(projectsArray)) 
+    ? projectsArray.map((project) => {
+        // Use the real expo URL from the database fragment
+        const expoUrl = project.expoUrl; // No fallback - only projects with real URLs are returned
+        
+        console.log(`📱 Project "${project.name}" expo URL:`, expoUrl);
+        console.log(`📱 Project data:`, JSON.stringify(project, null, 2));
+        
+        return {
+          id: project.id,
+          name: project.name,
+          icon: project.name.charAt(0).toUpperCase(),
+          lastModified: new Date(project.updatedAt).toLocaleDateString(),
+          expoUrl: expoUrl,
+        };
+      })
+    : [];
     
-    console.log(`📱 Project "${project.name}" expo URL:`, expoUrl);
-    
-    return {
-      id: project.id,
-      name: project.name,
-      icon: project.name.charAt(0).toUpperCase(),
-      lastModified: new Date(project.updatedAt).toLocaleDateString(),
-      expoUrl: expoUrl,
-    };
-  }) || [];
+  console.log('🔄 Transformed projects:', transformedProjects);
 
-  // Show real projects if available, otherwise show mock project
-  const allProjects = transformedProjects.length > 0 
-    ? transformedProjects 
-    : [mockProjects[0]]; // Fallback to mock project
+  // Show real projects if available, otherwise show empty state
+  const allProjects = transformedProjects;
 
   return (
     <View style={styles.container}>
@@ -162,7 +212,17 @@ export const VibeProjectsList: React.FC = () => {
           </Text>
         </View>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              tintColor="#FF6B35"
+              colors={["#FF6B35"]}
+            />
+          }
+        >
           {allProjects.map((project) => (
             <VibeProjectCard
               key={project.id}

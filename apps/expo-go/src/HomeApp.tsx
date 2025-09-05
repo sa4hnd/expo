@@ -70,7 +70,6 @@ export default function HomeApp() {
 
   React.useEffect(() => {
     addProjectHistoryListener();
-    addForegroundHomeListener();
   }, []);
 
   React.useEffect(() => {
@@ -103,19 +102,6 @@ export default function HomeApp() {
           await OrangeMenu.showOrangeMenuAsync();
         } catch (error) {
           console.log('Failed to show orange menu:', error);
-        }
-      }
-    });
-  };
-
-  const addForegroundHomeListener = () => {
-    addListenerWithNativeCallback('ExponentKernel.foregroundHome', async () => {
-      // Hide orange menu when home becomes visible
-      if (Platform.OS === 'ios') {
-        try {
-          await OrangeMenu.hideOrangeMenuAsync();
-        } catch (error) {
-          console.log('Failed to hide orange menu:', error);
         }
       }
     });

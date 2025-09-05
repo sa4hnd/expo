@@ -4,7 +4,7 @@ import superjson from 'superjson';
 import { ENV } from './env';
 
 // Import the AppRouter type from the backend
-import type { AppRouter } from '../../../../vibe/src/trpc/routers/_app';
+import type { AppRouter } from '../../../../../vibe/src/trpc/routers/_app';
 
 // Create TRPC React hooks
 export const trpc = createTRPCReact<AppRouter>();
@@ -17,8 +17,8 @@ export function createTRPCClient(getToken: () => Promise<string | null>) {
   return createBaseTRPCClient<AppRouter>({
     links: [
       httpBatchLink({
-        transformer: superjson,
         url: `${API_URL}/api/trpc`,
+        transformer: superjson,
         headers: async () => {
           try {
             const token = await getToken();
@@ -38,10 +38,10 @@ export function createTRPCClient(getToken: () => Promise<string | null>) {
 
 // Default client for initial setup
 export const trpcClient = createBaseTRPCClient<AppRouter>({
-  transformer: superjson,
   links: [
     httpBatchLink({
       url: `${API_URL}/api/trpc`,
+      transformer: superjson,
     }),
   ],
 });

@@ -4,16 +4,18 @@ import { Ionicons } from '../Icons';
 import { useVibeAuth } from '../../contexts/VibeAuthContext';
 import { VibeAuthModal } from './VibeAuthModal';
 import { VibeProfileModal } from './VibeProfileModal';
+import { VibeChatModal } from './VibeChatModal';
 
 interface VibeHeaderProps {
   onProfilePress: () => void;
   onPlusPress: () => void;
 }
 
-export const VibeHeader: React.FC<VibeHeaderProps> = ({ onProfilePress, onPlusPress }) => {
-  const { isAuthenticated, user, signOut } = useVibeAuth();
+export const VibeHeader: React.FC<VibeHeaderProps> = ({ onProfilePress }) => {
+  const { isAuthenticated, user } = useVibeAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
   const handleProfilePress = () => {
@@ -51,7 +53,10 @@ export const VibeHeader: React.FC<VibeHeaderProps> = ({ onProfilePress, onPlusPr
             </TouchableOpacity>
             
             {isAuthenticated && (
-              <TouchableOpacity style={styles.actionButton} onPress={onPlusPress}>
+              <TouchableOpacity 
+                style={styles.actionButton} 
+                onPress={() => setShowChatModal(true)}
+              >
                 <Ionicons name="add" size={20} color="#FFFFFF" />
               </TouchableOpacity>
             )}
@@ -70,6 +75,12 @@ export const VibeHeader: React.FC<VibeHeaderProps> = ({ onProfilePress, onPlusPr
       <VibeProfileModal
         visible={showProfileModal}
         onClose={() => setShowProfileModal(false)}
+      />
+
+      {/* Chat Modal */}
+      <VibeChatModal
+        visible={showChatModal}
+        onClose={() => setShowChatModal(false)}
       />
     </>
   );
