@@ -16,10 +16,6 @@ export const getNavigatorProps = (props: {
   activeColor: props.theme === 'dark' ? darkTheme.link.default : lightTheme.link.default,
   inactiveColor: props.theme === 'dark' ? darkTheme.icon.default : lightTheme.icon.default,
   barStyle: {
-    borderTopWidth:
-      props.theme === 'dark' ? StyleSheet.hairlineWidth * 2 : StyleSheet.hairlineWidth,
-    borderTopColor: Colors[props.theme].cardSeparator,
-    backgroundColor:
-      props.theme === 'dark' ? darkTheme.background.default : lightTheme.background.default,
+    display: 'none', // Hide the tab bar
   },
 });

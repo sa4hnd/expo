@@ -14,10 +14,7 @@ export const getNavigatorProps = (props: {
     tabBarLabelStyle: { fontFamily: 'Inter-SemiBold' },
     tabBarHideOnKeyboard: false,
     tabBarStyle: {
-      backgroundColor:
-        props.theme === 'dark' ? darkTheme.background.default : lightTheme.background.default,
-      borderTopColor: props.theme === 'dark' ? darkTheme.border.default : lightTheme.border.default,
-      borderTopWidth: StyleSheet.hairlineWidth,
+      display: 'none', // Hide the tab bar
     },
     tabBarActiveTintColor:
       props.theme === 'dark' ? darkTheme.link.default : lightTheme.link.default,

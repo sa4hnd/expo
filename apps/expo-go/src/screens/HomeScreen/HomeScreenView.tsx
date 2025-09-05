@@ -108,7 +108,10 @@ export class HomeScreenView extends React.Component<Props, State> {
     return (
       <View style={styles.container}>
         <VibeHeader 
-          onProfilePress={() => this.props.navigation.navigate('Account')}
+          onProfilePress={() => {
+            // Show Clerk sign-in instead of Expo account
+            console.log('Profile pressed - should show Clerk sign-in');
+          }}
           onPlusPress={() => console.log('Plus button pressed')}
         />
         {/* Vibe Home Content */}

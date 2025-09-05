@@ -1,6 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { VibeProjectCard } from './VibeProjectCard';
+import { VibeAuthModal } from './VibeAuthModal';
+import { useVibeAuth } from '../../contexts/VibeAuthContext';
+import { Ionicons } from '../Icons';
 import * as Linking from 'expo-linking';
 
 interface Project {
@@ -50,6 +53,50 @@ const mockProjects: Project[] = [
 ];
 
 export const VibeProjectsList: React.FC = () => {
+  const { isAuthenticated, isLoading } = useVibeAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.sectionTitle}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.sectionTitle}>Your Projects</Text>
+          <View style={styles.signInPrompt}>
+            <Ionicons name="lock-closed" size={48} color="#666666" />
+            <Text style={styles.signInTitle}>Sign in to view your projects</Text>
+            <Text style={styles.signInSubtitle}>
+              Access your Vibe projects and continue building amazing apps
+            </Text>
+            <TouchableOpacity 
+              style={styles.signInButton}
+              onPress={() => {
+                setAuthMode('signin');
+                setShowAuthModal(true);
+              }}
+            >
+              <Text style={styles.signInButtonText}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        
+        <VibeAuthModal
+          visible={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          initialMode={authMode}
+        />
+      </>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Your Projects</Text>
@@ -78,6 +125,38 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 16,
     paddingHorizontal: 20,
+  },
+  signInPrompt: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  signInTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginTop: 20,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  signInSubtitle: {
+    fontSize: 16,
+    color: '#CCCCCC',
+    textAlign: 'center',
+    marginBottom: 30,
+    lineHeight: 24,
+  },
+  signInButton: {
+    backgroundColor: '#FF6B35',
+    paddingHorizontal: 40,
+    paddingVertical: 16,
+    borderRadius: 12,
+  },
+  signInButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
